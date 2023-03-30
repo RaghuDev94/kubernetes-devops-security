@@ -24,9 +24,24 @@ pipeline {
 
     stage('Docker image build and push') {
       steps {
-        sh 'docker build -t raghudev199/java-app:latest .'
-        sh 'docker push raghudev199/java-app:latest'
+        sh 'docker build -t docker-registry:5000/java-app:latest .'
+        sh 'docker push docker-registry:5000/java-app:lates'
+      }
+    }
+
+
+
+    stage('Mutation Tests - PIT') {
+      steps {
+        sh "mvn org.pitest:pitest-maven:mutationCoverage"
+      }
+      post {
+        always {
+          pitmutation mutationStatsFile: '**/target/pit-reports/**/mutations.xml'
+        }
       }
     }
   }
 } 
+
+
