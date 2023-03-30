@@ -1,12 +1,15 @@
 pipeline {
   agent any
+
   stages {
+
     stage('Build Artifact - Maven') {
       steps {
         sh "mvn clean package -DskipTests=true"
         archive 'target/*.jar'
       }
     }
+
     stage('Unit Tests - JUnit and Jacoco') {
       steps {
         sh "mvn test"
@@ -18,5 +21,11 @@ pipeline {
         }
       }
     }
+
+    stage('Docker image build and push') {
+      steps {
+        sh 'docker build -t docker-registry:5000/java-app:latest .'
+      }
+    }
   }
-}
+} 
