@@ -24,11 +24,12 @@ pipeline {
 
     stage('Docker image build and push') {
       steps {
+        withdockerRegistry([CredentialsId: "docker", url: ""]){
         sh 'docker build -t raghudev199/jenkinsbuilds:latest .'
         sh 'docker push raghudev199/jenkinsbuilds:latest'
       }
     }
-
+}
 
 
     stage('Mutation Tests - PIT') {
