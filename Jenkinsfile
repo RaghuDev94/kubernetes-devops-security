@@ -2,7 +2,7 @@ pipeline {
   agent any
 
   stages {
-
+    parallel{
     stage('Build Artifact - Maven') {
       steps {
         sh "mvn clean package -DskipTests=true"
@@ -52,6 +52,6 @@ pipeline {
    
    
    
-   
+   }
    }
  }
