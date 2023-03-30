@@ -22,17 +22,8 @@ pipeline {
       }
     }
 
-    stage('Docker image build and push') {
-      steps {
-        withdockerRegistry([CredentialsId: "docker", url: ""]){
-        sh 'docker build -t raghudev199/jenkinsbuilds:latest .'
-        sh 'docker push raghudev199/jenkinsbuilds:latest'
-      }
-    }
-}
 
-
-    stage('Mutation Tests - PIT') {
+	stage('Mutation Tests - PIT') {
       steps {
         sh "mvn org.pitest:pitest-maven:mutationCoverage"
       }
@@ -42,7 +33,25 @@ pipeline {
         }
       }
     }
-  }
-} 
 
 
+
+ stage('SonarQube - SAST') {
+      steps {
+        sh "mvn clean verify sonar:sonar -Dsonar.projectKey=Jenkins -Dsonar.host.url=http://raghudevsecops.eastus.cloudapp.azure.com:9000 -Dsonar.login=sqp_40b8a947f881d4d68efa2d0cc93d5536c4222fc0"
+      }
+    }
+
+
+    stage('Docker image build and push') {
+      steps {
+        sh 'docker build -t raghudev199/java-app:latest .'
+        sh 'docker push raghudev199/java-app:latest'
+       }
+     }
+   
+   
+   
+   
+   }
+ }
